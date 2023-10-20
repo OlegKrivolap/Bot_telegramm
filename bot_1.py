@@ -1,33 +1,88 @@
-from aiogram.methods.answer_callback_query import AnswerCallbackQuery
 from aiogram import Bot, Dispatcher, Router, types
 from token_1 import TOKEN_my
 import asyncio
 from aiogram.filters import CommandStart, Command
 from aiogram import F
+from parcer import our_dict
 
 bot = Bot(token=TOKEN_my)
 dp = Dispatcher()
 router = Router()
 
-buttons = [types.KeyboardButton(text='Money'),
-           types.KeyboardButton(text='Honey')
-           ]
+buttons = [types.KeyboardButton(text='Все товары'),
+           types.KeyboardButton(text='Джинсы'),
+           types.KeyboardButton(text='Топы')]
 kb = types.ReplyKeyboardMarkup(keyboard=[[*buttons]], resize_keyboard=True)
 
-buttons_1 = [
-    types.InlineKeyboardButton(text='Super', callback_data='send'),
-    types.InlineKeyboardButton(text='Puper', url='https://www.youtube.com/watch?v=ce1idtN6-wQ&t=3493s')
-]
-
-inkb = types.InlineKeyboardMarkup(inline_keyboard=[[*buttons_1]])
 
 rmkb = types.ReplyKeyboardRemove()
-
-
+x = 1
 
 @dp.message(CommandStart())
-async def echo(message: types.Message):
-    await message.answer('hi', reply_markup=kb)
+async def start(message: types.Message):
+    await message.answer(f'Какую одежду вы хотите посмотреть ?', reply_markup=kb)
+
+
+@dp.message(F.text == 'Все товары')
+async def all_products(message: types.Message):
+    count_for_spis = 1
+    for i in our_dict[1:]:
+        count_for_spis += 1
+        count = 1
+        while count < len(i):
+            await message.answer_photo(f'{i[count]["picture"]}')
+            buttons_1 = [
+                types.InlineKeyboardButton(text=f'{i[count]["price"]}', callback_data='o'),
+                types.InlineKeyboardButton(text='Перейти на сайт магазина', url=f'{i[count]["url"]}'),
+
+            ]
+
+            inkb = types.InlineKeyboardMarkup(inline_keyboard=[[*buttons_1]])
+            await message.answer(text=f'{our_dict[1][count]["name"]}', reply_markup=inkb)
+    # await message.answer(text='Нужно ли вам загрузить еще товаров?', reply_markup=kb)
+        # @dp.message(F.text == 'Вперед', F.text == 'Назад')
+        # def fun_fuc(text):
+        #     global x
+        #     if not text == 'Вперед':
+        #         x -= 1
+        #     else:
+        #         x += 1
+        #     return x
+
+            count += 1
+        # x = count
+        # z = fun_fuc(input('Следующий или предыдущий?'))
+        # count = z
+
+@dp.message(F.text == 'Джинсы')
+async def all_products(message: types.Message):
+    count = 1
+    while count < len(our_dict[1]):
+        if 'jeans' in our_dict[1][count]["name"]:
+            await message.answer_photo(f'{our_dict[1][count]["picture"]}')
+            buttons_1 = [
+                types.InlineKeyboardButton(text=f'{our_dict[1][count]["price"]}', callback_data='o'),
+                types.InlineKeyboardButton(text='Перейти на сайт магазина', url=f'{our_dict[1][count]["url"]}'),
+
+            ]
+
+            inkb = types.InlineKeyboardMarkup(inline_keyboard=[[*buttons_1]])
+            await message.answer(text=f'{our_dict[1][count]["name"]}', reply_markup=inkb)
+
+
+# @dp.callback_query(F.text == 'name')
+# def name_(message: types.Message):
+
+
+@dp.message(F.text == 'button')
+async def inly(message: types.Message):
+    await message.answer(text='Клава супер',reply_markup=inkb )
+
+
+@dp.message(F.text == 'button')
+async def inly(message: types.Message):
+    await message.answer(text='Клава супер',reply_markup=inkb )
+
 
 @dp.message(Command(commands='stop'))
 async def echo(message: types.Message):
@@ -37,6 +92,8 @@ async def echo(message: types.Message):
 @dp.message(F.text == 'button')
 async def inly(message: types.Message):
     await message.answer(text='Клава супер',reply_markup=inkb )
+
+
 
 @dp.message(F.photo)
 async def echo(message: types.Message):
