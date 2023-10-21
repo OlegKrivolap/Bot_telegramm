@@ -44,12 +44,11 @@ for count in range(1, 7):
             price = item.find('h5').text.replace('\n', '')
             picture = 'https://scrapingclub.com' + item.find('img').get('src')
             url_for_page = 'https://scrapingclub.com' + item.find('a').get('href')
-            dictionary.update({count_1:{}})
+            dictionary.update({count_1: {}})
             dictionary[count_1].update({'name': name})
             dictionary[count_1].update({'price': price})
             dictionary[count_1].update({'picture': picture})
             dictionary[count_1].update({'url': url_for_page})
             count_1 += 1
     count_1 = 1
-print(dict_data_page_2)
 
